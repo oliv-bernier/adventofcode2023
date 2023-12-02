@@ -1,0 +1,11 @@
+{
+  "name": "adventofcode2023",
+  "version": "0.0.1",
+  "author": "Olivier Bernier <olivbernier@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "prettier": "3.1.0",
+    "ts-node": "10.9.1",
+    "typescript": "5.3.2"
+  }
+}
