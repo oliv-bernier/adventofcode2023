@@ -3,9 +3,13 @@
   "version": "0.0.1",
   "author": "Olivier Bernier <olivbernier@gmail.com>",
   "license": "MIT",
-  "dependencies": {
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "devDependencies": {
     "prettier": "3.1.0",
     "ts-node": "10.9.1",
+    "tslib": "2.6.2",
     "typescript": "5.3.2"
   }
 }
