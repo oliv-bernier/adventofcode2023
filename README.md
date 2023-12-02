@@ -1,7 +1,7 @@
 # adventofcode2023
 
-Here's my small contribution to the Advent of Code 2023 solutions, using **TypeScript** 🤙
-https://adventofcode.com/
+#### Here's my small contribution to the Advent of Code 2023 solutions, using **TypeScript** 🤙  
+#### https://adventofcode.com/  
 
 ### 🎄🎄🎄
 
