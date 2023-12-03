@@ -54,3 +54,127 @@ console.log('Solution of Part one =>', partOneSolution)
 // ****************
 // *** PART TWO ***
 // ****************
+
+// TODO not finished yet
+
+const EXTRACT_ASTERISK_REGEX = /\*/g
+
+const browseRightForNumber = (input: string, startIndex: number) => {
+  const match = input.slice(startIndex + 1).match(EXTRACT_NUMBERS_REGEX)
+  return match ? match[0] : ''
+}
+
+const browseLeftForNumber = (input: string, startIndex: number) => {
+  let endIndex = startIndex
+
+  while (endIndex >= 0 && /\d/.test(input[endIndex])) {
+    endIndex--
+  }
+
+  return input.slice(endIndex + 1, startIndex + 1)
+}
+
+console.log('test right =>', browseRightForNumber('..89526..15..15', 3))
+
+console.log('test left =>', browseLeftForNumber('..89526..15..15', 4))
+
+// TODO redo this method
+const getWholeNumber = (input: string, startIndex: number): number => {
+  const rightResult = browseRightForNumber(input, startIndex)
+  const leftResult = browseLeftForNumber(input, startIndex)
+
+  const number = leftResult + rightResult.slice(1)
+
+  console.log('number =>', number)
+  return parseInt(number, 10)
+}
+
+const extractNumbersStartIndex = (input: string) => {
+  const indexes = []
+  let match
+
+  while ((match = EXTRACT_NUMBERS_REGEX.exec(input)) !== null) {
+    indexes.push(match.index)
+  }
+
+  return indexes
+}
+
+const getGearRatios = (engineSchematic: string[]): number[] => {
+  const gearRatios: number[] = []
+
+  engineSchematic.forEach((line, lineIndex) => {
+    let match: RegExpExecArray | null
+
+    while ((match = EXTRACT_ASTERISK_REGEX.exec(line)) !== null) {
+      const startIndex = match.index - 1
+      const endIndex = match.index + 1
+
+      const previousLine = engineSchematic[lineIndex - 1]
+      const nextLine = engineSchematic[lineIndex + 1]
+
+      const leftNumber = EXTRACT_NUMBERS_REGEX.test(line[startIndex])
+        ? parseInt(browseLeftForNumber(line, startIndex), 10)
+        : null
+      const rightNumber = EXTRACT_NUMBERS_REGEX.test(line[endIndex])
+        ? parseInt(browseRightForNumber(line, endIndex), 10)
+        : null
+
+      const numbersAboveStartIndexes = previousLine
+        ? extractNumbersStartIndex(previousLine.substring(startIndex, match.index + 1))
+        : []
+      const numbersBelowStartIndexes = nextLine
+        ? extractNumbersStartIndex(nextLine.substring(startIndex, match.index + 1))
+        : []
+
+      const numbersAbove: number[] = []
+      const numbersBelow: number[] = []
+
+      numbersAboveStartIndexes.forEach((numbersAboveIndex) => {
+        const numberAbove = getWholeNumber(previousLine, startIndex + numbersAboveIndex)
+
+        numbersAbove.push(numberAbove)
+      })
+
+      numbersBelowStartIndexes.forEach((numbersBelowIndex) => {
+        const numberBelow = getWholeNumber(nextLine, startIndex + numbersBelowIndex)
+
+        numbersBelow.push(numberBelow)
+      })
+
+      const foundPartNumbers: number[] = []
+
+      console.log(numbersAboveStartIndexes, numbersBelowStartIndexes)
+
+      if (leftNumber) {
+        foundPartNumbers.push(leftNumber)
+      }
+
+      if (rightNumber) {
+        foundPartNumbers.push(rightNumber)
+      }
+
+      if (numbersAbove.length > 0) {
+        foundPartNumbers.push(...numbersAbove)
+      }
+
+      if (numbersBelow.length > 0) {
+        foundPartNumbers.push(...numbersAbove)
+      }
+
+      if (foundPartNumbers.length === 2) {
+        const gearRatio = foundPartNumbers.reduce((acc, partNumber) => acc * partNumber, 1)
+
+        gearRatios.push(gearRatio)
+      }
+    }
+  })
+
+  return gearRatios
+}
+
+const gearRatios = getGearRatios(puzzleInput.split('\n'))
+
+const partTwoSolution = gearRatios.reduce((acc, gearRatio) => acc + gearRatio, 0)
+
+console.log('Solution of Part two =>', partTwoSolution)
