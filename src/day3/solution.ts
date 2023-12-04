@@ -57,7 +57,7 @@ console.log('Solution of Part one =>', partOneSolution)
 
 const EXTRACT_ASTERISK_REGEX = /\*/g
 
-const browseRightForNumber = (input: string, startIndex: number, lineIndex: number) => {
+const browseRightForNumber = (input: string, startIndex: number) => {
   const match = input.slice(startIndex).match(EXTRACT_NUMBERS_REGEX)
   return match ? match[0] : ''
 }
@@ -72,8 +72,8 @@ const browseLeftForNumber = (input: string, startIndex: number) => {
   return input.slice(endIndex + 1, startIndex + 1)
 }
 
-const getWholeNumber = (input: string, startIndex: number, lineIndex: number): number => {
-  const rightResult = browseRightForNumber(input, startIndex, lineIndex)
+const getWholeNumber = (input: string, startIndex: number): number => {
+  const rightResult = browseRightForNumber(input, startIndex)
   const leftResult = browseLeftForNumber(input, startIndex)
 
   const number = leftResult + rightResult.slice(1)
@@ -81,7 +81,7 @@ const getWholeNumber = (input: string, startIndex: number, lineIndex: number): n
   return parseInt(number, 10)
 }
 
-const extractNumbersStartIndex = (input: string, lineIndex: number) => {
+const extractNumbersStartIndex = (input: string) => {
   const indexes = []
   let match
 
@@ -106,26 +106,26 @@ const getGearRatios = (engineSchematic: string[]): number[] => {
       const nextLine = engineSchematic[lineIndex + 1]
 
       const leftNumber = /\d+/.test(line[startIndex]) ? browseLeftForNumber(line, startIndex) : null
-      const rightNumber = /\d+/.test(line[endIndex]) ? browseRightForNumber(line, match.index, lineIndex) : null
+      const rightNumber = /\d+/.test(line[endIndex]) ? browseRightForNumber(line, match.index) : null
 
       const numbersAboveStartIndexes = previousLine
-        ? extractNumbersStartIndex(previousLine.substring(startIndex, match.index + 2), lineIndex)
+        ? extractNumbersStartIndex(previousLine.substring(startIndex, match.index + 2))
         : []
       const numbersBelowStartIndexes = nextLine
-        ? extractNumbersStartIndex(nextLine.substring(startIndex, match.index + 2), lineIndex)
+        ? extractNumbersStartIndex(nextLine.substring(startIndex, match.index + 2))
         : []
 
       const numbersAbove: number[] = []
       const numbersBelow: number[] = []
 
       numbersAboveStartIndexes.forEach((numbersAboveIndex) => {
-        const numberAbove = getWholeNumber(previousLine, startIndex + numbersAboveIndex, lineIndex)
+        const numberAbove = getWholeNumber(previousLine, startIndex + numbersAboveIndex)
 
         numbersAbove.push(numberAbove)
       })
 
       numbersBelowStartIndexes.forEach((numbersBelowIndex) => {
-        const numberBelow = getWholeNumber(nextLine, startIndex + numbersBelowIndex, lineIndex)
+        const numberBelow = getWholeNumber(nextLine, startIndex + numbersBelowIndex)
 
         numbersBelow.push(numberBelow)
       })
